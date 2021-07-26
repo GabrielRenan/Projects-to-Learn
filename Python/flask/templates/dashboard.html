@@ -2,45 +2,80 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Jogoteca</title>
-<script>
-function includeHTML() {
-  var z, i, elmnt, file, xhttp;
-  /*loop through a collection of all HTML elements:*/
-  z = document.getElementsByTagName("*");
-  for (i = 0; i < z.length; i++) {
-    elmnt = z[i];
-    /*search for elements with a certain atrribute:*/
-    file = elmnt.getAttribute("w3-include-html");
-    if (file) {
-      /*make an HTTP request using the attribute value as the file name:*/
-      xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4) {
-          if (this.status == 200) {elmnt.innerHTML = this.responseText;}
-          if (this.status == 404) {elmnt.innerHTML = "Page not found.";}
-          /*remove the attribute, and call this function once more:*/
-          elmnt.removeAttribute("w3-include-html");
-          includeHTML();
-        }
-      }      
-      xhttp.open("GET", file, true);
-      xhttp.send();
-      /*exit the function:*/
-      return;
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ntsec Chamados</title>
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../static/css/jquery-3.6.0.min.js"><script/>
+    <script type="text/javascript" src="../static/css/bootstrap.min.js"><script/>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <style type="text/css">
+    div{
+      border: 1px solid #000;
+      height: 100px;
     }
-  }
-};
-</script>
+    <style/>
+    <link rel="icon" href="img/icon.png" >
   </head>
   <body>
-    <div w3-include-html = "D:\Curso_Python_Alura\GitHub\Projects-to-Learn\Python\flask\templates\teste.html">
-    
+      <div class="container-fluid">
+      <div class="row">
+      <div class="col-sm-6 col-xs-12">
+      <table class="table table-striped table-responsive table-bordered">
+        <thead>
+            <tr>
+                <th>Ticket</th>
+                <th>Status</th>
+                <th>Data criação</th>
+                <th>Hora</th>
+                <th>Criado Por</th>
+                <th>Responsavel</th>
+                <th>Espera Cliente</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for x in range(contador) %}
+                        <tr>
+                            <td><a href="https://suporte.ntsec.com.br/Ticket/Edit/{{ id[x] }}" > {{ id[x] }}</a></td>
+                            <td>{{ tabela[x]['status'] }}</td>
+                            <td>{{ tabela[x]['dia'] }}</td>
+                            <td>{{ tabela[x]['hora1'] }}</td>
+                            <td>{{ tabela[x]['cliente'] }}</td>
+                            <td>{{ tabela[x]['supo'] }}</td>
+                            {%if (tabela[x]['hora2'][0:2] != 00) or (tabela[x]['hora2'][3:4] == 3) %}
+                              <td style="color:red"> {{ tabela[x]['hora2'] }} </td>
+                            {% else %}
+                              <td>{{ tabela[x]['hora2'] }}</td>
+                            {% endif %}
+                        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+      </div>
+      </div>
+    <div class="row">
+    <div class="col-sm-6 col-xs-12">
+    {% extends 'teste.html' %}
     </div>
-<script>
-includeHTML();
-</script>
-
+    </div>
+    </div>   
  </body>
 </html>
+
+      <!--
+      <script> 
+        $(document).ready(function(){
+        setInterval(function(){
+              $("#here").load(window.location.href + " #here" );
+        }, 1000);
+        });
+      </script>
+
+       <script> 
+        $(document).ready(function(){
+        setInterval(function(){
+              $("#here2").load(window.location.href + " #here2" );
+        }, 1000);
+        });
+      </script>
+        
+      -->

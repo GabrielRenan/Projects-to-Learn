@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="../static/js/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../static/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <link rel="shortcut icon" type="image/png" href="https://s3.amazonaws.com/movidesk-files/B678AC17AB7877C451736483DBC96C48">
+    <title>Ntsec Dashboard</title>
+  </head>
+  <body>
+    <div class="page-header">
+        <img src="https://s3.amazonaws.com/movidesk-files/B678AC17AB7877C451736483DBC96C48" alt="Logo-Ntsec" width=100px>
+    </div>
+        <script>
+            $(document).ready(function(){
+        setInterval(function(){
+              $("#setTime").load(window.location.href + " #setTime" );
+        }, 60000);
+        });
+      </script>
+<div class="container-fluid">
+    <div class="row">
+
+    </div>
+    <div class="row">
+            <div id="setTime" >
+            <p style="position:center;"><b>Ntsec Brasilia Novo/Em Atendimento</b></p>      
+                <table style="height:200px" class="table table-striped table-responsive table-bordered">
+                    <thead class="thead-default">
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Status</th>
+                        <th>Data criação</th>
+                        <th style="width:150px;">Criado Por</th>
+                        <th>Responsavel</th>
+                        <th>Espera Cliente</th>
+                        <th>Para vencer SLA</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody-default">
+                    {% for x in range(contador) %}
+                    <tr>
+                        <td><a href="https://suporte.ntsec.com.br/Ticket/Edit/{{ id[x] }}" > {{ id[x] }}</a></td>
+                        <td>{{ status[x] }}</td>
+                        <td>{{ tabela[x]['dia'] }}</td>
+                        <td>{{ cliente[x] }}</td>
+                        <td>{{ responsa[x] }}</td>
+                        {% if (tabela[x]['h'] >=1)  %}
+                            <td style="color:red"> <b>{{ tabela[x]['espera']}} &#x26A0</b></td>
+                        {%else%}
+                            <td>{{ tabela[x]['espera']}}</td>
+                        {%endif%}
+                        <td><b>{{ tabela[x]['falta']}}h</b></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <script>
+                $(document).ready(function(){
+            setInterval(function(){
+                $("#setTime2").load(window.location.href + " #setTime2" );
+            }, 300000);
+            });
+            </script>
+            <div id="setTime2">
+            <p><b>Ntsec Brasília Aguardando</b></p>
+            <table style="height:200px" class="table table-striped table-responsive table-bordered">
+                    <thead class="thead-default">
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Status</th>
+                        <th>Data criação</th>
+                        <th>Responsavel</th>
+                        <th>SLA Solução vence em:</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody-default">
+                    {% for j in range(contador_a) %}
+                    <tr>
+                        <td><a href="https://suporte.ntsec.com.br/Ticket/Edit/{{ id_a[j] }}" > {{ id_a[j] }}</a></td>
+                        <td>{{ status_a[j] }}</td>
+                        <td>{{ tabela_a[j]['dia'] }}</td>
+                        <td>{{ responsa_a[j] }}</td>
+                        <td><b>{{ tabela_a[j]['falta']}}h{{ tabela_a[j]['falta_m'] }}m</b></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            </div>
+    </div>
+        <div class="row">
+        <script>
+            $(document).ready(function(){
+        setInterval(function(){
+            $("#setTime4").load(window.location.href + " #setTime4" );
+        }, 30000);
+        });
+        </script>
+        <div id="setTime4" >
+            <p style="position:center;"><b>Ntsec Brasilia Retorno Fabricante</b></p>      
+                <table style="height:200px" class="table table-striped table-responsive table-bordered">
+                    <thead class="thead-default">
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Status</th>
+                        <th>Data criação</th>
+                        <th>Responsavel</th>
+                        <th>Justificativa</th>
+                        <th>Espera Cliente</th>
+                        <th>SLA Solução</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody-default">
+                    {% for k in range(contador_f) %}
+                    <tr>
+                        <td><a href="https://suporte.ntsec.com.br/Ticket/Edit/{{ id_f[k] }}" > {{ id_f[k] }}</a></td>
+                        <td>{{ status_f[k] }}</td>
+                        <td>{{ tabela_f[k]['dia'] }}</td>
+                        <td>{{ responsa_f[k] }}</td>
+                        <td>{{ fab[k] }}</td>
+                        <td>{{ tabela_f[k]['esp_h']}}</td>
+                        <td><b>{{ tabela_f[k]['falta']}}h{{ tabela_f[k]['falta_m'] }}m</b></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+        </div>
+            <script>
+                $(document).ready(function(){
+            setInterval(function(){
+                $("#setTime1").load(window.location.href + " #setTime1" );
+            }, 1000);
+            });
+            </script>
+            <div id="setTime1">
+            <p><b>Ntsec Brasília Urgência Crítica/Alta</b></p>
+            <table style="height:200px" class="table table-striped table-responsive table-bordered">
+                    <thead class="thead-default">
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Status</th>
+                        <th>Urgência</th>
+                        <th>Data criação</th>
+                        <th>Responsavel</th>
+                        <th>SLA Solução vence em:</th>
+                    </tr>
+                    </thead>
+                    <tbody class="tbody-default">
+                    {% for i in range(contador_u) %}
+                    <tr>
+                        <td><a href="https://suporte.ntsec.com.br/Ticket/Edit/{{ id_u[i] }}" > {{ id_u[i] }}</a></td>
+                        <td>{{ status_u[i] }}</td>
+                        <td>{{ urgencia[i] }}</td>
+                        <td>{{ tabela_u[i]['dia'] }}</td>
+                        <td>{{ responsa_u[i] }}</td>
+                        <td><b>{{ tabela_u[i]['falta']}}h{{ tabela_u[i]['falta_m'] }}m</b></td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+            </table>
+            </div>
+
+            </div>    
+
+</div>
+</body>
+</html>
+
+<!--
+                <script>
+            $(document).ready(function(){
+            setInterval(function(){
+                $("#setTime3").load(window.location.href + " #setTime3" );
+            }, 30000);
+            });
+            </script>
+                <div class="col-sm-6" id="setTime3">
+                    {% extends 'teste.html' %}
+                </div>
+-->

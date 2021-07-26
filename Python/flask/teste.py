@@ -1,84 +1,38 @@
 from flask import Flask, render_template
-import json
-import subprocess
-import requests
-import urllib
-from datetime import datetime as dt
-from datetime import timedelta
-import datetime
-from dateutil.relativedelta import relativedelta
-from tabulate import tabulate
-import plotly.offline as py
-import plotly.graph_objs as go
-import plotly.io as pio
-from tabulate import tabulate
-import io
-import base64
+from make_dash import Dash
+from make_tables import Tables
+import time
 
-def fig_to_base64(fig):
-    img = io.BytesIO()
-    fig.savefig(img, format='png',
-                bbox_inches='tight')
-    img.seek(0)
-
-    return base64.b64encode(img.getvalue())
 
 app = Flask(__name__)
 
-def elapsed_interval(start,end):
-    elapsed = end - start
-    min,secs=divmod(elapsed.days * 86400 + elapsed.seconds, 60)
-    hour, minutes = divmod(min, 60)
-    return '%.2dh%.2dmin%.2ds' % (abs(hour),abs(minutes),abs(secs))
-
-@app.route('/graph')
+@app.route('/')
 def ola():
-    with urllib.request.urlopen("https://api.movidesk.com/public/v1/tickets?token=&$select=id,subject,status,justification,lastActionDate,createdDate&$filter=createdDate%20gt%202021-01-01T00:00:00.00z&$expand=owner,createdBy&$orderby=id%20desc&$top=100") as url:  
-        data = json.loads(url.read().decode())
-    x_novo = []
-    y_novo = []
-    x_atendimento = []
-    y_atendimento = []
-    x_aguardando = []
-    y_aguardando = []
-    count1, count2, count3 = 0,0,0      
-    for x in range(len(data)):
-        if ((data[x]["status"] == "Em atendimento") and (data[x]["createdBy"]["businessName"] != "SOC-NTSec-CLIENT")):
-            x_atendimento.append(data[x]["status"])
-            y_atendimento.append(data[x]["id"])
-            count1+=1
-        elif ((data[x]["status"] == "Novo") and (data[x]["createdBy"]["businessName"] != "SOC-NTSec-CLIENT")):
-            x_novo.append(data[x]["status"])
-            y_novo.append(data[x]["id"])
-            count2+=1
-        elif ((data[x]["status"] == "Aguardando") and (data[x]["createdBy"]["businessName"] != "SOC-NTSec-CLIENT")):
-            x_aguardando.append(data[x]["status"])
-            y_aguardando.append(data[x]["id"])
-            count3+=1
+    url = "https://api.movidesk.com/public/v1/tickets?token=e9368c54-8ec6-4cb5-a311-1ef7ec4350cc&$select=id,subject,status,ownerTeam,slaResponseTime,slaSolutionTime,justification,urgency,lastActionDate,createdDate&$filter=createdDate%20gt%202021-01-01T00:00:00.00z%20and%20status%20ne%20%27Fechado%27%20and%20status%20ne%20%27Cancelado%27%20and%20status%20ne%20%27Resolvido%27%20and%20ownerTeam%20ne%20%27Monitoramento%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N1%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N2%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N3%20Nordeste%27%20and%20ownerTeam%20ne%20%27SIEM%20Nordeste%27%20and%20ownerTeam%20ne%20%27SOC%20NTSec%27&$expand=owner,createdBy&$orderby=id%20desc&$top=1500"
 
-    py.init_notebook_mode(connected=True)
-    #so marcadores
-    trace_novo = go.Bar(x = x_novo,
-                y = y_novo,
-                name = f'Novos: {count2}',
-                marker = {'color': '#009F1B'})
-    trace_atendi = go.Bar(x = x_atendimento,
-                y = y_atendimento,
-                name = f'Em Atendimento: {count1}',
-                marker = {'color': '#42D40B'})
-    trace_aguard = go.Bar(x = x_aguardando,
-                y = y_aguardando,
-                name = f'Aguardando: {count3}',
-                marker = {'color': '#46FF00'})
-
-    _graph = [trace_novo, trace_atendi, trace_aguard]
-    layout = go.Layout(title = 'Grafico de barras chamados Ntsec',
-                    xaxis = {'title': 'Status chamados'},
-                    yaxis = {'title': 'Número Ticket'},
-                    barmode = 'stack')
-    fig = go.Figure(data=_graph, layout=layout)
-    pio.write_html(fig,file='./templates/teste.html', auto_open=False)
-    return render_template('dashboard.html')
+    graph = Dash(url)
+    graph.constroi_graph()
     
-app.run()
+    tabela = Tables(url)
+    table, ticket, status, cliente, responsa, cont = tabela.constroi_table()
+    
+    table_aguar, ticket_aguar, status_aguar, responsa_aguar, cont_aguar = tabela.controi_table_aguardando()
+    
+    table_urg, ticket_urg, status_urg, responsa_urg, urgencia, cont_urg = tabela.controi_table_urgency()
+    
+    tabela_fab, ticket_fab, status_fab, responsa_fab, just, cont_fab = tabela.controi_table_fab()
+    while True:
+        return render_template('lista.html', tabela=table, contador=cont,
+                               id= ticket, status=status, cliente=cliente,
+                               responsa=responsa, tabela_a=table_aguar,
+                                id_a= ticket_aguar, status_a=status_aguar,
+                                responsa_a=responsa_aguar, contador_a=cont_aguar,
+                                tabela_u=table_urg,id_u= ticket_urg,
+                                status_u=status_urg, urgencia=urgencia,
+                                responsa_u=responsa_urg, contador_u=cont_urg,
+                                tabela_f=tabela_fab,id_f= ticket_fab,
+                                status_f=status_fab, fab=just,
+                                responsa_f=responsa_fab, contador_f=cont_fab)
+        
+app.run(debug=True)
  
