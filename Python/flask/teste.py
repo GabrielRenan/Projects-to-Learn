@@ -5,6 +5,7 @@ import time
 
 
 app = Flask(__name__)
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 @app.route('/')
 def ola():
