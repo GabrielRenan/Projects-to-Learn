@@ -9,7 +9,7 @@ app.config['SERVER_NAME'] = 'localhost:5000'
 
 @app.route('/')
 def ola():
-    url = "https://api.movidesk.com/public/v1/tickets?token=e9368c54-8ec6-4cb5-a311-1ef7ec4350cc&$select=id,subject,status,ownerTeam,slaResponseTime,slaSolutionTime,justification,urgency,lastActionDate,createdDate&$filter=createdDate%20gt%202021-01-01T00:00:00.00z%20and%20status%20ne%20%27Fechado%27%20and%20status%20ne%20%27Cancelado%27%20and%20status%20ne%20%27Resolvido%27%20and%20ownerTeam%20ne%20%27Monitoramento%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N1%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N2%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N3%20Nordeste%27%20and%20ownerTeam%20ne%20%27SIEM%20Nordeste%27%20and%20ownerTeam%20ne%20%27SOC%20NTSec%27&$expand=owner,createdBy&$orderby=id%20desc&$top=1500"
+    url = "https://api.movidesk.com/public/v1/tickets?token=&$select=id,subject,status,ownerTeam,slaResponseTime,slaSolutionTime,justification,urgency,lastActionDate,createdDate&$filter=createdDate%20gt%202021-01-01T00:00:00.00z%20and%20status%20ne%20%27Fechado%27%20and%20status%20ne%20%27Cancelado%27%20and%20status%20ne%20%27Resolvido%27%20and%20ownerTeam%20ne%20%27Monitoramento%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N1%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N2%20Nordeste%27%20and%20ownerTeam%20ne%20%27Suporte-N3%20Nordeste%27%20and%20ownerTeam%20ne%20%27SIEM%20Nordeste%27%20and%20ownerTeam%20ne%20%27SOC%20NTSec%27&$expand=owner,createdBy&$orderby=id%20desc&$top=1500"
 
     graph = Dash(url)
     graph.constroi_graph()
